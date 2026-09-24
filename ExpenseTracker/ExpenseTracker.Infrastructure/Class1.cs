@@ -1,7 +1,7 @@
-﻿namespace ExpenseTracker.Infrastructure
-{
+﻿namespace ExpenseTracker.Infrastructure;
+
     public class Class1
     {
 
     }
-}
+

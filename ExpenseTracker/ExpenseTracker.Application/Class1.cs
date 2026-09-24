@@ -1,7 +1,7 @@
-﻿namespace ExpenseTracker.Application
-{
+﻿namespace ExpenseTracker.Application;
+
     public class Class1
     {
 
     }
-}
+
