@@ -1,7 +1,10 @@
 ﻿using ExpenseTracker.Application.Common.Interfaces;
+using ExpenseTracker.Infrastructure.Configuration;
 using ExpenseTracker.Infrastructure.Data;
 using ExpenseTracker.Infrastructure.Data.Repositories;
+using ExpenseTracker.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,12 +16,23 @@ namespace ExpenseTracker.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructureServices(
+            this IServiceCollection services,
+            IConfiguration configuration)
         {
+            // 1. Base de datos SQLite
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlite("Data Source=ExpenseTracker.db"));
 
-            services.AddScoped <IExpenseRepository, ExpenseRepository>();
+            // 2. Repositorio de Gastos
+            services.AddScoped<IExpenseRepository, ExpenseRepository>();
+
+            // 3. Opciones de configuración para Gemini (Options Pattern)
+            services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
+
+            // 4. Cliente HTTP con el servicio categorizador de Gemini
+            services.AddHttpClient<IAiCategorizerService, GeminiCategorizerService>();
+
             return services;
         }
     }
