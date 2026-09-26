@@ -25,6 +25,7 @@ public class GeminiCategorizerService : IAiCategorizerService
 
     public async Task<List<ClassifiedExpenseDto>> CategorizeExpensesAsync(
         List<string> descriptions,
+        List<string> existingCategories,
         CancellationToken cancellationToken = default)
     {
         if (descriptions == null || descriptions.Count == 0)
@@ -32,6 +33,11 @@ public class GeminiCategorizerService : IAiCategorizerService
 
         // 1. Usamos el modelo y la clave directo de las options
         var url = $"https://generativelanguage.googleapis.com/v1beta/models/{_options.Model}:generateContent?key={_options.ApiKey}";
+
+        var categoriesText = existingCategories != null && existingCategories.Any()
+        ? $"Categorías existentes sugeridas (prioriza usar estas si aplican, o crea nuevas si no hay ninguna adecuada): {JsonSerializer.Serialize(existingCategories)}.\n\n"
+    : "";
+
 
         // 2. Usamos las instrucciones que viven en las options
         var requestBody = new
@@ -49,7 +55,7 @@ public class GeminiCategorizerService : IAiCategorizerService
                 {
                     parts = new[]
                     {
-                        new { text = $"Clasifica la siguiente lista de consumos:\n{JsonSerializer.Serialize(descriptions)}" }
+                      new { text = $"{categoriesText}Clasifica la siguiente lista de consumos:\n{JsonSerializer.Serialize(descriptions)}" }
                     }
                 }
             },

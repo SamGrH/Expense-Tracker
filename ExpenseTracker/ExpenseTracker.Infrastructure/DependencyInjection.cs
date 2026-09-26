@@ -2,6 +2,7 @@
 using ExpenseTracker.Infrastructure.Configuration;
 using ExpenseTracker.Infrastructure.Data;
 using ExpenseTracker.Infrastructure.Data.Repositories;
+using ExpenseTracker.Infrastructure.Parsers;
 using ExpenseTracker.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -27,11 +28,15 @@ namespace ExpenseTracker.Infrastructure
             // 2. Repositorio de Gastos
             services.AddScoped<IExpenseRepository, ExpenseRepository>();
 
+            services.AddScoped<ICategoryRepository, CategoryRepository>();
+
             // 3. Opciones de configuración para Gemini (Options Pattern)
             services.Configure<GeminiOptions>(configuration.GetSection(GeminiOptions.SectionName));
 
             // 4. Cliente HTTP con el servicio categorizador de Gemini
             services.AddHttpClient<IAiCategorizerService, GeminiCategorizerService>();
+
+            services.AddScoped<IStatementParser,SimpleTextStatementParser>();
 
             return services;
         }
