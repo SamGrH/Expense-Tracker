@@ -17,6 +17,7 @@ namespace ExpenseTracker.Domain.Entities
 
         private Expense() { }
 
+
         public Expense(int id, string description, decimal amount, DateTime date, int categoryId)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(description);
@@ -30,6 +31,21 @@ namespace ExpenseTracker.Domain.Entities
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(categoryId);
 
             Id = id;
+            Description = description;
+            Amount = amount;
+            Date = date;
+            CategoryId = categoryId;
+        }
+        public Expense(string description, decimal amount, DateTime date, int categoryId)
+        {
+            ArgumentException.ThrowIfNullOrWhiteSpace(description);
+
+            if (description.Length > 200)
+            {
+                throw new ArgumentOutOfRangeException(nameof(description), "Description cannot exceed 200 characters.");
+            }
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(amount);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(categoryId);
             Description = description;
             Amount = amount;
             Date = date;

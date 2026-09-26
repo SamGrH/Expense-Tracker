@@ -8,6 +8,16 @@ public sealed class Category
 
 
     private Category() { }
+
+    public Category(string name)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        if (name.Length > 100)
+        {
+            throw new ArgumentOutOfRangeException(nameof(name), "Category name cannot exceed 100 characters.");
+        }
+        Name = name;
+    }
     public Category(int id, string name)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);

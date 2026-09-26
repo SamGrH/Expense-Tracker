@@ -9,7 +9,9 @@ namespace ExpenseTracker.Application.Common.Interfaces
 {
     public interface IAiCategorizerService
     {
-        Task<List<ClassifiedExpenseDto>> CategorizeExpensesAsync(List<string> descriptions,
+        Task<List<ClassifiedExpenseDto>> CategorizeExpensesAsync(
+            List<string> descriptions,
+            List<string> existingCategories,
             CancellationToken cancellationToken = default);
     }
 }
